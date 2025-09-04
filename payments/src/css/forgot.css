@@ -1,0 +1,51 @@
+.input-for-email-forgot {
+  border: 1.5px solid rgb(33, 38, 44);
+  padding: 1% 8% 1% 2%;
+  display: flex;
+  width: 65%;
+}
+
+.forms-forgot {
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.input-for-email-forgot img {
+  border-right: 1.5px solid rgb(33, 38, 44);
+  padding: 3% 3% 3% 1%;
+  width: 7%;
+  margin-right: 0%;
+}
+.input-for-email-forgot input {
+  border: none;
+  margin-left: 4%;
+  margin-right: 13%;
+  background-color: #f5f5f5;
+}
+
+.forgot-go-to-server {
+  color: rgb(42, 63, 95);
+  font-family: Arial;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: -1px;
+  letter-spacing: 0px;
+  text-align: center;
+  background-color: rgba(1, 1, 1, 0);
+  border: 1px solid black;
+  padding: 2% 10% 2% 10%;
+  margin-top: 2%;
+}
+
+.header-of-forgot {
+  color: rgb(42, 63, 95);
+  font-family: Arial;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: -1px;
+  letter-spacing: 0px;
+  text-align: center;
+}

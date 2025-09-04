@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/static/css/main.a190356b.css",
+    "main.js": "/static/js/main.f63fafb1.js",
+    "static/js/453.bf740619.chunk.js": "/static/js/453.bf740619.chunk.js",
+    "static/media/close-eyes.svg": "/static/media/close-eyes.708d5e1724e93779e6ba2108ce0882f9.svg",
+    "static/media/minimaze.svg": "/static/media/minimaze.bbd9fd63389eaed3512c3afa124b601b.svg",
+    "static/media/maximaze.svg": "/static/media/maximaze.08c0065382be8e1a37934b581f258820.svg",
+    "static/media/open-eyes.svg": "/static/media/open-eyes.fb1e3ae19712638098d30ad321556310.svg",
+    "static/media/telefon.svg": "/static/media/telefon.2ab67b2254ec0c17f91a8398122bb7ec.svg",
+    "static/media/goToPayments.svg": "/static/media/goToPayments.7baf259551199bd9401c6b77dc55293b.svg",
+    "static/media/calendari.svg": "/static/media/calendari.b372cbd0d9e23efc77961efec7f3f39c.svg",
+    "static/media/email.svg": "/static/media/email.58b68e6e209a70ead4401077c0bf1b8e.svg",
+    "static/media/password.svg": "/static/media/password.3b25c06eec1846c5bbbea776ddfaf579.svg",
+    "index.html": "/index.html",
+    "main.a190356b.css.map": "/static/css/main.a190356b.css.map",
+    "main.f63fafb1.js.map": "/static/js/main.f63fafb1.js.map",
+    "453.bf740619.chunk.js.map": "/static/js/453.bf740619.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a190356b.css",
+    "static/js/main.f63fafb1.js"
+  ]
+}

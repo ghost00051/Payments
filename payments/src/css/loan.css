@@ -1,0 +1,53 @@
+.header-of-loan {
+  color: rgb(42, 63, 95);
+  font-family: Arial;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: -1px;
+  letter-spacing: 0px;
+  text-align: center;
+}
+.god-of-form-loan {
+  display: flex;
+  flex-direction: column;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.god-of-form-loan div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4%;
+}
+.description-of-loan {
+  color: rgb(42, 63, 95);
+  font-family: Arial;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: 0px;
+  text-align: left;
+}
+
+html,
+body {
+  touch-action: none;
+}
+
+.loan-go-to-server {
+  color: rgb(42, 63, 95);
+  font-family: Arial;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: -1px;
+  letter-spacing: 0px;
+  text-align: center;
+  background-color: rgba(1, 1, 1, 0);
+  border: 1px solid black;
+  padding: 2% 17% 2% 17%;
+}
+
+
+.perents-of-loan{
+    margin-top: 20%;
+}
