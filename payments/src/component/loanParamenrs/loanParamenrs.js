@@ -20,7 +20,7 @@ function LoanParameters () {
   const getProfile = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/profile', {
+      const response = await fetch('http://91.223.89.222/profile', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -64,7 +64,7 @@ function LoanParameters () {
 
       const endDate = calculateEndDate(startDate, paymentsCountNum)
 
-      const response = await fetch('http://localhost:3000/installments', {
+      const response = await fetch('http://91.223.89.222/installments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

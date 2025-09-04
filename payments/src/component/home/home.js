@@ -32,7 +32,7 @@ function Home () {
   const getProfile = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/profile', {
+      const response = await fetch('http://91.223.89.222/profile', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ function Home () {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        `http://localhost:3000/installments/${userId}`,
+        `http://91.223.89.222/installments/${userId}`,
         {
           method: 'GET',
           headers: {
@@ -98,7 +98,7 @@ function Home () {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        `http://localhost:3000/payments/installment/${datainstel}`,
+        `http://91.223.89.222/payments/installment/${datainstel}`,
         {
           method: 'GET',
           headers: {
@@ -158,7 +158,7 @@ function Home () {
       formData.append('due_date', due_date)
       formData.append('photo', photo)
 
-      const response = await fetch('http://localhost:3000/payments', {
+      const response = await fetch('http://91.223.89.222/payments', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`

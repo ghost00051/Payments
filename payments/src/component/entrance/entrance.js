@@ -32,7 +32,7 @@ function Entrance () {
   const entrance = async event => {
     event.preventDefault()
     try {
-      const serv = await fetch('http://localhost:3000/login', {
+      const serv = await fetch('http://91.223.89.222/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -81,7 +81,7 @@ function Entrance () {
   const getProfile = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/profile', {
+      const response = await fetch('http://91.223.89.222/profile', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -107,7 +107,7 @@ function Entrance () {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        `http://localhost:3000/installments/${userId}`,
+        `http://91.223.89.222/installments/${userId}`,
         {
           method: 'GET',
           headers: {
