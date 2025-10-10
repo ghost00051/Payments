@@ -6,6 +6,8 @@ import maxim from '../../img/maximaze.svg'
 import minimize from '../../img/minimaze.svg'
 import goToPayments from '../../img/goToPayments.svg'
 import crossForm from '../../img/cross.svg'
+import openMenu from '../../img/openMenu.svg'
+import History from '../history/history'
 
 function Home () {
   const [item, setItem] = useState(null)
@@ -24,6 +26,10 @@ function Home () {
   const fileInputRef = useRef(null)
   const [paymentProgress, setPaymentProgress] = useState(0)
   const [showModal, setShowModal] = useState(false)
+  const [activeTab, setActiveTab] = useState('upcoming')
+  const [indicatorStyle, setIndicatorStyle] = useState({})
+  const upcomingRef = useRef(null)
+  const historyRef = useRef(null)
 
   const handleBlur = () => {
     setShowModal(false)
@@ -32,7 +38,7 @@ function Home () {
   const getProfile = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://91.223.89.222/profile', {
+      const response = await fetch('http://91.223.89.222:30001/profile', {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -58,7 +64,7 @@ function Home () {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        `http://91.223.89.222/installments/${userId}`,
+        `http://91.223.89.222:30001/installments/${userId}`,
         {
           method: 'GET',
           headers: {
@@ -98,7 +104,7 @@ function Home () {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        `http://91.223.89.222/payments/installment/${datainstel}`,
+        `http://91.223.89.222:30001/payments/installment/${datainstel}`,
         {
           method: 'GET',
           headers: {
@@ -158,7 +164,7 @@ function Home () {
       formData.append('due_date', due_date)
       formData.append('photo', photo)
 
-      const response = await fetch('http://91.223.89.222/payments', {
+      const response = await fetch('http://91.223.89.222:30001/payments', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`
@@ -209,6 +215,64 @@ function Home () {
     }
   }, [totalamount, minusamount])
 
+  useEffect(() => {
+    updateIndicator()
+  }, [activeTab])
+
+  const updateIndicator = () => {
+    const activeElement =
+      activeTab === 'upcoming' ? upcomingRef.current : historyRef.current
+
+    if (activeElement) {
+      const { offsetLeft, offsetWidth } = activeElement
+      setIndicatorStyle({
+        left: `${offsetLeft}px`,
+        width: `${offsetWidth}px`
+      })
+    }
+  }
+
+  const tabVariants = {
+    hidden: {
+      opacity: 0,
+      x: 50,
+      transition: {
+        duration: 0.3,
+        ease: 'easeInOut'
+      }
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.4,
+        ease: 'easeOut'
+      }
+    },
+    exit: {
+      opacity: 0,
+      x: -50,
+      transition: {
+        duration: 0.3,
+        ease: 'easeInOut'
+      }
+    }
+  }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  }
+
+  const handleTabChange = tab => {
+    setActiveTab(tab)
+  }
+
   return (
     <div className='home-container'>
       <div className='perents-of-home'>
@@ -231,154 +295,214 @@ function Home () {
         </div>
       </div>
 
-      <div className='calendari-of-next-payments'>
-        <div>
-          <p>Следующий платеж</p>
-          <img src={calendari} alt='календарь' />
-        </div>
-        <p className='date-vision'>{datevision}</p>
-      </div>
+      <div className='switchOfInformation'>
+        <div className='childOfSwitchOfInformation'>
+          <div className='active-indicator' style={indicatorStyle} />
 
-      <div>
-        <div>
-          <p className='payment-schedule'>График платежей</p>
-          <div className='god-of-counter'>
-            <p className='header-of-god-of-counter'>Осталось платежей</p>
-            <div className='counter-payments'>
-              <p>{sumarpayments}</p>
-              <p>/{allsumarpayments}</p>
-            </div>
-          </div>
-
-          <div className='installmens-container'>
-            <AnimatePresence>
-              {installmens.slice(0, visibleCount).map((installment, index) => (
-                <motion.div
-                  key={installment.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={`installment-item item-${installment.id}`}
-                >
-                  <div>
-                    <p className='number-of-payment'>{index + 1}-й платеж</p>
-                    <p className='amount-of-payment'>{installment.amount} ₽</p>
-                  </div>
-                  <p className='date-of-payment'>
-                    {new Date(installment.due_date).toLocaleDateString()}
-                  </p>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-
-            {installmens.length > 4 && (
-              <motion.button
-                onClick={toggleExpand}
-                className='toggle-button'
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                {isExpanded ? (
-                  <>
-                    <p className='minimize'>Скрыть</p>
-                    <motion.img
-                      src={minimize}
-                      alt='Скрыть'
-                      animate={{ rotate: 180 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <p className='maximaze'>Показать еще</p>
-                    <motion.img
-                      src={maxim}
-                      alt='Показать еще'
-                      animate={{ rotate: 180 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </>
-                )}
-              </motion.button>
-            )}
-          </div>
-        </div>
-      </div>
-      <div>
-        <button
-          className='button-vision-go-to-payments'
-          onClick={() => setShowModal(true)}
-        >
-          <p>Внести платеж</p>
-          <img src={goToPayments} alt='Go-to-Paymentd' />
-        </button>
-      </div>
-
-      <AnimatePresence>
-        {showModal && (
-          <motion.div
-            className='last-form-for-home'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+          <button
+            ref={upcomingRef}
+            className={`Upcoming ${activeTab === 'upcoming' ? 'active' : ''}`}
+            onClick={() => handleTabChange('upcoming')}
           >
-            <motion.form
-              className='go-to-server-payments-main'
-              onSubmit={getToPayments}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+            Предстоящие
+          </button>
+          <button
+            ref={historyRef}
+            className={`History ${activeTab === 'history' ? 'active' : ''}`}
+            onClick={() => handleTabChange('history')}
+          >
+            История
+          </button>
+        </div>
+      </div>
+ 
+
+      <AnimatePresence mode='wait'>
+        {activeTab === 'upcoming' && (
+          <motion.div
+            key="upcoming"
+            className='UpcomingVision'
+            variants={tabVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <div className='calendari-of-next-payments'>
+              <div>
+                <p>Следующий платеж</p>
+                <img src={calendari} alt='календарь' />
+              </div>
+              <p className='date-vision'>{datevision}</p>
+            </div>
+            
+            <motion.div variants={containerVariants}>
+              <p className='payment-schedule'>График платежей</p>
+              <motion.div 
+                className='god-of-counter'
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                <p className='header-of-god-of-counter'>Осталось платежей</p>
+                <div className='counter-payments'>
+                  <p>{sumarpayments}</p>
+                  <p>/{allsumarpayments}</p>
+                </div>
+              </motion.div>
+
+              <div className='installmens-container'>
+                <AnimatePresence>
+                  {installmens.slice(0, visibleCount).map((installment, index) => (
+                    <motion.div
+                      key={installment.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      className={`installment-item item-${installment.id}`}
+                    >
+                      <div>
+                        <p className='number-of-payment'>{index + 1}-й платеж</p>
+                        <p className='amount-of-payment'>{installment.amount} ₽</p>
+                      </div>
+                      <p className='date-of-payment'>
+                        {new Date(installment.due_date).toLocaleDateString()}
+                      </p>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+
+                {installmens.length > 4 && (
+                  <motion.button
+                    onClick={toggleExpand}
+                    className='toggle-button'
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    {isExpanded ? (
+                      <>
+                        <p className='minimize'>Скрыть</p>
+                        <motion.img
+                          src={minimize}
+                          alt='Скрыть'
+                          animate={{ rotate: 180 }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <p className='maximaze'>Показать еще</p>
+                        <motion.img
+                          src={maxim}
+                          alt='Показать еще'
+                          animate={{ rotate: 180 }}
+                          transition={{ duration: 0.3 }}
+                        />
+                      </>
+                    )}
+                  </motion.button>
+                )}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
             >
-              <div className='close-for-go-to-server-payments-main'>
-                <img onClick={handleBlur} src={crossForm} alt='закрыть' />
-              </div>
-              <div className='labels-form-go-to-server-payments-main'>
-                <label>
-                  <p className='header-of-form-get-to-payments header-of-form-get-to-payments-1'>
-                    Введите сумму
-                  </p>
-                  <input
-                    className='number-of-form-get-to-payments'
-                    type='number'
-                    onChange={e => setAmount(e.target.value)}
-                    required
-                  />
-                </label>
-                <label>
-                  <p className='header-of-form-get-to-payments date-header-of-form-get-to-payments'>
-                    Выберите дату
-                  </p>
-                  <input
-                    className='date-of-form-get-to-payments'
-                    type='date'
-                    onChange={e => setDue_date(e.target.value)}
-                    required
-                  />
-                </label>
-                <label>
-                  <p className='header-of-form-get-to-payments'>
-                    Загрузите чек
-                  </p>
-                  <input
-                    className='file-of-form-get-to-payments'
-                    type='file'
-                    onChange={e => setPhoto(e.target.files[0])}
-                    setPhoto
-                    ref={fileInputRef}
-                    required
-                  />
-                </label>
-              </div>
-              <div className='button-form-go-to-server-payments'>
-                <button type='submit'>Отправить</button>
-              </div>
-            </motion.form>
+              <button
+                className='button-vision-go-to-payments'
+                onClick={() => setShowModal(true)}
+              >
+                <p>Внести платеж</p>
+                <img src={goToPayments} alt='Go-to-Paymentd' />
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {activeTab === 'history' && (
+          <motion.div
+            key="history"
+            className='HistoryVision'
+            variants={tabVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <History />
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+
+        <AnimatePresence>
+          {showModal && (
+            <motion.div
+              className='last-form-for-home'
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.form
+                className='go-to-server-payments-main'
+                onSubmit={getToPayments}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div className='close-for-go-to-server-payments-main'>
+                  <img onClick={handleBlur} src={crossForm} alt='закрыть' />
+                </div>
+                <div className='labels-form-go-to-server-payments-main'>
+                  <label>
+                    <p className='header-of-form-get-to-payments header-of-form-get-to-payments-1'>
+                      Введите сумму
+                    </p>
+                    <input
+                      className='number-of-form-get-to-payments'
+                      type='number'
+                      onChange={e => setAmount(e.target.value)}
+                      required
+                    />
+                  </label>
+                  <label>
+                    <p className='header-of-form-get-to-payments date-header-of-form-get-to-payments'>
+                      Выберите дату
+                    </p>
+                    <input
+                      className='date-of-form-get-to-payments'
+                      type='date'
+                      onChange={e => setDue_date(e.target.value)}
+                      required
+                    />
+                  </label>
+                  <label>
+                    <p className='header-of-form-get-to-payments'>
+                      Загрузите чек
+                    </p>
+                    <input
+                      className='file-of-form-get-to-payments'
+                      type='file'
+                      onChange={e => setPhoto(e.target.files[0])}
+                      setPhoto
+                      ref={fileInputRef}
+                      required
+                    />
+                  </label>
+                </div>
+                <div className='button-form-go-to-server-payments'>
+                  <button type='submit'>Отправить</button>
+                </div>
+              </motion.form>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
   )
 }
 

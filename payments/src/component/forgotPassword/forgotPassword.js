@@ -13,7 +13,7 @@ function Forgot () {
     setMessage('')
 
     try {
-      const response = await fetch('http://91.223.89.222/forgot-password', {
+      const response = await fetch('http://91.223.89.222:30001/forgot-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

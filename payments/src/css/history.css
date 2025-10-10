@@ -1,0 +1,42 @@
+.history-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #c4c4c4;
+  margin-bottom: 2%;
+  border-radius: 5px;
+  padding: 0 2% 0 1%;
+}
+
+.colName {
+  display: grid;
+  grid-template-columns: 19% 38% 36% 8%;
+  padding: 0 2% 0 1%;
+}
+
+.historyOfPayments button {
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+}
+
+.number-of-history,
+.date-of-history,
+.amount-of-history,
+.colName p {
+  font-family: Arial;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 1px;
+}
+
+.headersOfPages {
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: 2%;
+}

@@ -4,7 +4,6 @@ module.exports = (pool, upload) => {
   const router = express.Router();
 
 
-  // Роут для обработки платежей
   router.post('/', upload.single('photo'), async (req, res) => {
     try {
       const { date, amount } = req.body;
@@ -29,7 +28,6 @@ module.exports = (pool, upload) => {
   });
 
 
-  // Роут для получения данных о записях
   router.get('/', async (req, res) => {
     try {
       const result = await pool.query('SELECT amount, status FROM payments');

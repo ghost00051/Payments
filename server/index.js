@@ -3,6 +3,8 @@ const multer = require('multer')
 const { Pool } = require('pg')
 const path = require('path')
 const cors = require('cors')
+const fs = require('fs')
+
 require('dotenv').config()
 console.log(
   'ENV:',
@@ -32,39 +34,23 @@ app.get('/health', (req, res) => {
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin) return callback(null, true)
-
-      const allowedOrigins = [
-        'http://localhost:3000', 
-        'http://localhost:3001',
-        'http://localhost:80',
-        'http://localhost:8080',
-        'http://91.223.89.222:3000', 
-        'http://91.223.89.222:80',
-        'http://91.223.89.222:8080',
-        'http://192.168.0.146:3000',
-        'http://192.168.0.146:80',
-        'http://192.168.0.146:8080',
-        'http://192.168.1.*:3000', 
-        'http://192.168.*.*:3000'
-      ]
-
-      if (allowedOrigins.includes(origin)) {
+      if (
+        !origin ||
+        origin.includes('://localhost') ||
+        origin.includes('://192.168') ||
+        origin.includes('://91.223.89.222')
+      ) {
         return callback(null, true)
       }
 
-      const originMatches = allowedOrigins.some(allowed => {
-        if (allowed.includes('*')) {
-          const regexPattern = allowed
-            .replace(/\./g, '\\.')
-            .replace(/\*/g, '.*')
-          const regex = new RegExp(`^${regexPattern}$`)
-          return regex.test(origin)
-        }
-        return false
-      })
+      const allowedPatterns = [
+        /^https?:\/\/localhost(:\d+)?$/,
+        /^https?:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
+        /^https?:\/\/91\.223\.89\.222(:\d+)?$/,
+        /^https?:\/\/.*$/
+      ]
 
-      if (originMatches) {
+      if (allowedPatterns.some(pattern => pattern.test(origin))) {
         return callback(null, true)
       }
 
@@ -77,6 +63,7 @@ app.use(
     exposedHeaders: ['Authorization']
   })
 )
+
 app.use(express.json())
 
 const pool = new Pool({
@@ -257,7 +244,6 @@ app.post(
 
       const userId = req.user.userId
 
-      // Проверяем, что рассрочка принадлежит пользователю
       const installmentCheck = await pool.query(
         'SELECT id FROM installments WHERE id = $1 AND user_id = $2',
         [installment_id, userId]
@@ -267,7 +253,6 @@ app.post(
         return res.status(404).json({ error: 'Installment not found' })
       }
 
-      // Находим ближайший pending/late платеж для этой рассрочки
       const pendingPayment = await pool.query(
         `SELECT id FROM payments 
          WHERE installment_id = $1 
@@ -285,7 +270,6 @@ app.post(
 
       const paymentId = pendingPayment.rows[0].id
 
-      // Обновляем статус конкретного платежа
       const result = await pool.query(
         `UPDATE payments 
          SET status = 'paid', 
@@ -297,7 +281,6 @@ app.post(
         [photo.path, paymentId]
       )
 
-      // Обновляем общую сумму оплаты по рассрочке
       await updateInstallmentPaidAmount(installment_id)
 
       res.status(200).json({
@@ -330,7 +313,6 @@ app.get(
       const { installment_id } = req.params
       const userId = req.user.userId
 
-      // Проверяем, что рассрочка принадлежит пользователю
       const installmentCheck = await pool.query(
         'SELECT id FROM installments WHERE id = $1 AND user_id = $2',
         [installment_id, userId]
@@ -353,7 +335,6 @@ app.get(
       const paymentsResult = await pool.query(paymentsQuery, [installment_id])
       let payments = paymentsResult.rows
 
-      // Обновляем статусы просроченных платежей
       const currentDate = new Date()
 
       for (let payment of payments) {
@@ -368,7 +349,7 @@ app.get(
         `
 
           const updatedPayment = await pool.query(updateQuery, [payment.id])
-          payment.status = 'late' // И здесь тоже измените
+          payment.status = 'late'
         }
       }
 
@@ -612,9 +593,21 @@ app.post('/register', async (req, res) => {
     )
 
     if (emailCheck.rows.length > 0) {
-      return res.status(200).json({
+      return res.status(400).json({
         success: false,
         error: 'Этот email уже зарегистрирован'
+      })
+    }
+
+    const phoneCheck = await pool.query(
+      'SELECT id FROM users WHERE phone = $1',
+      [phone]
+    )
+
+    if (phoneCheck.rows.length > 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Этот телефон уже зарегистрирован'
       })
     }
 
@@ -836,11 +829,10 @@ app.put(
   }
 )
 
-const PORT = process.env.SERVER_PORT || 3000
+const PORT = process.env.SERVER_PORT || 30001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
-
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path}`)
   console.log('Headers:', req.headers)
@@ -1168,22 +1160,57 @@ app.post(
   }
 )
 
-// const cron = require('node-cron')
+app.get('/payments/history', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId
 
-// cron.schedule('0 0 * * *', async () => {
-//   try {
-//     console.log('Checking for overdue payments...')
+    const historyQuery = `
+      SELECT 
+        p.id,
+        p.amount,
+        p.due_date,
+        p.paid_date,
+        p.status,
+        p.photo_path,
+        p.sequence,
+        i.id as installment_id,
+        i.total_amount as installment_total
+      FROM payments p
+      INNER JOIN installments i ON p.installment_id = i.id
+      WHERE i.user_id = $1 
+        AND p.status = 'paid'
+        AND p.paid_date IS NOT NULL
+      ORDER BY p.paid_date DESC
+    `
 
-//     const result = await pool.query(
-//       `UPDATE payments
-//        SET status = 'late'
-//        WHERE status = 'pending'
-//        AND due_date < CURRENT_DATE
-//        RETURNING *`
-//     )
+    const result = await pool.query(historyQuery, [userId])
 
-//     console.log(`Updated ${result.rowCount} overdue payments`)
-//   } catch (error) {
-//     console.error('Error in payment cron job:', error)
-//   }
-// })
+    res.status(200).json({
+      success: true,
+      payments: result.rows,
+      total_count: result.rows.length
+    })
+  } catch (error) {
+    console.error('Error fetching payment history:', error)
+    res.status(500).json({
+      success: false,
+      error: 'Ошибка при получении истории платежей'
+    })
+  }
+})
+
+app.get('/download/:filename', authenticateToken, (req, res) => {
+  try {
+    const { filename } = req.params
+    const filePath = path.join(process.env.UPLOAD_DIR, filename)
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Файл не найден' })
+    }
+
+    res.download(filePath, `чек_${filename}`)
+  } catch (error) {
+    console.error('Error downloading file:', error)
+    res.status(500).json({ error: 'Ошибка загрузки файла' })
+  }
+})

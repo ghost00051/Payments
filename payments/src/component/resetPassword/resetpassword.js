@@ -12,7 +12,7 @@ function ResetPassword () {
   const resetPas = async event => {
     event.preventDefault()
     try {
-      const response = await fetch('http://91.223.89.222/reset-password', {
+      const response = await fetch('http://91.223.89.222:30001/reset-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

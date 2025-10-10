@@ -4,7 +4,8 @@ node_modules
 
 .env
 .env.local
-
-package-lock.json
-*/package-lock.json/*
-**/package-lock.json/**
+logs
+payments-auto-start.bat
+payments-background.bat
+start.txt
+ecosystem.config.js

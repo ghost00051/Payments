@@ -31,7 +31,7 @@
 
 html,
 body {
-  touch-action: none;
+  /* touch-action: none; */
 }
 
 .loan-go-to-server {

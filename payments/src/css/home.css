@@ -387,3 +387,128 @@
   border-radius: 10px;
   margin-bottom: 6%;
 }
+
+.paymentsMade {
+  margin: 20px auto 0;
+  padding: 10px 30px 10px 30px;
+  background: #ff7f50;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 72%;
+}
+
+.paymentsMade p {
+  margin: 0;
+  color: rgb(255, 255, 255);
+  font-family: Arial;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 1px;
+  text-align: left;
+  margin-right: 5%;
+}
+
+.switchOfInformation {
+  margin: 2% 15% 2% 14%;
+  border-radius: 10px;
+}
+.childOfSwitchOfInformation {
+  padding: 3% 3% 3% 3%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.childOfSwitchOfInformation button {
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+}
+
+.History,
+.Upcoming {
+  font-family: Arial;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  border: none;
+  padding: 3% 5% 3% 4%;
+  transition: color 0.3s ease;
+  margin: 0 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+.childOfSwitchOfInformation {
+  position: relative;
+  display: inline-flex;
+  background: white;
+  border-radius: 20px;
+  padding: 2px;
+  gap: 20px;
+  width: 100%;
+}
+
+.History.active,
+.Upcoming.active {
+  color: white;
+}
+
+.UpcomingVision,
+.HistoryVision {
+  position: relative;
+  overflow: hidden;
+}
+
+.content-enter {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.content-enter-active {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.content-exit {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.content-exit-active {
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.tab-content {
+  position: relative;
+}
+
+.active-indicator {
+  position: absolute;
+  background: #ff7f50;
+  border-radius: 20px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  top: 2px;
+  bottom: 2px;
+  z-index: 0;
+  box-shadow: 0 2px 8px rgba(255, 127, 80, 0.3);
+}
+
+.History:not(.active):hover,
+.Upcoming:not(.active):hover {
+  color: #ff7f50;
+  transform: translateY(-1px);
+}

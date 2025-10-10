@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import './App.css'
 import face from './img/Shape.jpeg'
 import closeEyes from './img/close-eyes.svg'
@@ -22,6 +22,11 @@ function App () {
   const normalizedText2 = text2.trim().toLowerCase()
   const [noColor, setColor] = useState('password-img')
   const [phoneNum, setPhoneNum] = useState('+7 ')
+  const [showPasswordError, setShowPasswordError] = useState(false)
+  const [showMatchError, setShowMatchError] = useState(false)
+  const [showEmailError, setShowEmailError] = useState(false)
+  const [showTelefonError, setShowTelefonError] = useState(false)
+  const API_URL = process.env.REACT_APP_API_URL || 'http://91.223.89.222:30001'
 
   useEffect(() => {
     if (normalizedText1 === normalizedText2 && normalizedText1 !== '') {
@@ -51,13 +56,13 @@ function App () {
     }
   }, [])
 
-  const togglepassword = () => {
-    setPasswordType(passwordType === 'password' ? 'text' : 'password')
-  }
+  const togglepassword = useCallback(() => {
+    setPasswordType(prev => (prev === 'password' ? 'text' : 'password'))
+  }, [])
 
-  const secTogglepassword = () => {
-    setSecpasswordType(secpasswordType === 'password' ? 'text' : 'password')
-  }
+  const secTogglepassword = useCallback(() => {
+    setSecpasswordType(prev => (prev === 'password' ? 'text' : 'password'))
+  }, [])
 
   const reload = () => {
     entrance('/entrance')
@@ -67,7 +72,7 @@ function App () {
     forgot('/forgot')
   }
 
-  const formatPhoneNumber = value => {
+  const formatPhoneNumber = useCallback(value => {
     const cleaned = value.replace(/\D/g, '')
     const limited = cleaned.slice(0, 11)
     let formattedValue = '+7 '
@@ -90,16 +95,19 @@ function App () {
       }
     }
     return formattedValue
-  }
+  }, [])
 
-  const handleChange = e => {
-    const input = e.target.value
-    if (input.length < 3) {
-      setPhoneNum('+7 ')
-      return
-    }
-    setPhoneNum(formatPhoneNumber(input))
-  }
+  const handleChange = useCallback(
+    e => {
+      const input = e.target.value
+      if (input.length < 3) {
+        setPhoneNum('+7 ')
+        return
+      }
+      setPhoneNum(formatPhoneNumber(input))
+    },
+    [formatPhoneNumber]
+  )
 
   const handleKeyDown = e => {
     if (e.key === 'Backspace' && phoneNum.length <= 3) {
@@ -114,8 +122,35 @@ function App () {
 
   const registration = async event => {
     event.preventDefault()
+    const passwordMatch = normalizedText1 === normalizedText2
+    const isPasswordStrong = password.length >= 6
+
+    if (!isPasswordStrong) {
+      setShowMatchError(true)
+      setShowPasswordError(false)
+
+      setTimeout(() => {
+        setShowMatchError(false)
+      }, 5000)
+      return
+    }
+
+    if (!passwordMatch) {
+      setShowPasswordError(true)
+      setShowMatchError(false)
+
+      setTimeout(() => {
+        setShowPasswordError(false)
+      }, 5000)
+      return
+    }
+    setShowPasswordError(false)
+    setShowMatchError(false)
+    setShowEmailError(false)
+    setShowTelefonError(false)
+
     try {
-      const response = await fetch('http://91.223.89.222/register', {
+      const response = await fetch(`${API_URL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -125,7 +160,8 @@ function App () {
           email,
           phone,
           password
-        })
+        }),
+        signal: AbortSignal.timeout(10000)
       })
       const responseData = await response.json()
       console.log('Response Status:', response.status)
@@ -135,11 +171,56 @@ function App () {
         navigation('/loanParamenrs')
       } else {
         console.log('Ошибка регистрации')
+        if (responseData.error === 'Этот email уже зарегистрирован') {
+          setShowEmailError(true)
+          setTimeout(() => {
+            setShowEmailError(false)
+          }, 5000)
+        }
+        if (responseData.error === 'Этот телефон уже зарегистрирован') {
+          setShowTelefonError(true)
+          setTimeout(() => {
+            setShowTelefonError(false)
+          }, 5000)
+        }
       }
     } catch (error) {
-      console.log('error')
+      console.error('Ошибка регистрации:', error)
+      alert('Произошла ошибка при регистрации. Попробуйте позже.')
     }
   }
+
+  const checkTokenValidity = useCallback(
+    async token => {
+      try {
+        const response = await fetch(`${API_URL}/profile`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        if (response.ok) {
+          navigation('/main')
+        } else {
+          localStorage.removeItem('token')
+          navigation('')
+        }
+      } catch (error) {
+        console.error('Ошибка проверки токена:', error)
+        localStorage.removeItem('token')
+        navigation('')
+      }
+    },
+    [API_URL, navigation]
+  )
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      checkTokenValidity(token)
+    }
+  }, [navigation, checkTokenValidity])
 
   return (
     <div className='App'>
@@ -152,8 +233,9 @@ function App () {
       <div id='Weikup' className={Weikup}>
         <p className='header-of-form'>Регистрация</p>
         <form onSubmit={registration}>
+          <p className='descriptionOfLabel'>Введите имя</p>
           <label className='name'>
-            <img src={face} alt='Лицо' />
+            <img src={face} alt='Лицо' loading='lazy' />
             <input
               type='text'
               name='name'
@@ -163,8 +245,14 @@ function App () {
               required
             />
           </label>
+          {showEmailError && (
+            <div className='emailNoActual active'>
+              <p>Такой email уже существует</p>
+            </div>
+          )}
+          <p className='descriptionOfLabel'>Введите email</p>
           <label className='email'>
-            <img src={emailSvg} alt='почта' />
+            <img src={emailSvg} alt='почта' loading='lazy' />
             <input
               type='email'
               name='email'
@@ -172,6 +260,17 @@ function App () {
               required
             />
           </label>
+          {showPasswordError && (
+            <div className='passwordNoLength active'>
+              <p>Пароли не совпадают</p>
+            </div>
+          )}
+          {showMatchError && (
+            <div className='passwordNoMatch active'>
+              <p>Пароль должен содержать минимум 6 символов</p>
+            </div>
+          )}
+          <p className='descriptionOfLabel'>Введите пароль</p>
           <label className='password'>
             <svg
               className={noColor}
@@ -208,14 +307,17 @@ function App () {
               src={closeEyes}
               alt='Лицо'
               id='closeEyes'
+              loading='lazy'
             />
             <img
               onClick={togglepassword}
               className={`openEyes ${passwordType === 'text' ? 'active' : ''}`}
               src={openEyes}
               alt='Лицо'
+              loading='lazy'
             />
           </label>
+          <p className='descriptionOfLabel'>Введите повторно пароль</p>
           <label className='check-password'>
             <svg
               className={noColor}
@@ -245,18 +347,28 @@ function App () {
               src={closeEyes}
               alt='Лицо'
               className={`closeEyes2 ${
-                passwordType === 'password' ? 'active' : ''
+                secpasswordType === 'password' ? 'active' : ''
               }`}
+              loading='lazy'
             />
             <img
-              className={`openEyes2 ${passwordType === 'text' ? 'active' : ''}`}
+              className={`openEyes2 ${
+                secpasswordType === 'text' ? 'active' : ''
+              }`}
               onClick={secTogglepassword}
               src={openEyes}
               alt='Лицо'
+              loading='lazy'
             />
           </label>
+          {showTelefonError && (
+            <div className='telefonNoActuality active'>
+              <p>Такой телефон уже существует</p>
+            </div>
+          )}
+          <p className='descriptionOfLabel'>Введите номер телефона</p>
           <label className='telefon'>
-            <img src={telefon} alt='телефон' />
+            <img src={telefon} alt='телефон' loading='lazy' />
             <input
               value={phoneNum}
               onChange={e => {
@@ -272,15 +384,15 @@ function App () {
             />
           </label>
           <div className='link-another'>
-            <p onClick={goForgot}>Забыли пароль?</p>
-            <p onClick={reload}>Войти</p>
+            <button type='button' onClick={goForgot} className='linkButton'>
+              Забыли пароль?
+            </button>
+            <button type='button' onClick={reload} className='linkButton'>
+              Войти
+            </button>
           </div>
-          <button
-            type='submit'
-            className='data-go-to-server'
-            //  onClick={handleRegistrationClick}
-          >
-            Зарегестрироваться
+          <button type='submit' className='data-go-to-server'>
+            Зарегистрироваться
           </button>
         </form>
       </div>
