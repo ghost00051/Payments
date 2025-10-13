@@ -3,7 +3,7 @@
   font-family: Arial;
   font-size: 24px;
   font-weight: 400;
-  line-height: -1px;
+  line-height: normal;
   letter-spacing: 0px;
   text-align: center;
 }
@@ -25,8 +25,10 @@
 .email-entrance input {
   border: none;
   margin-left: 4%;
-  margin-right: 13%;
-  background-color: rgba(1, 1, 1, -0.1);
+  margin-right: 1%;
+  background-color: transparent;
+  width: 100%;
+  outline: none;
 }
 
 .email-entrance {
@@ -35,6 +37,7 @@
   display: flex;
   width: 65%;
   margin-top: 4%;
+  align-items: center; 
 }
 
 .email-entrance img {
@@ -51,22 +54,13 @@
   margin-right: 0%;
 }
 
-/* .password-img {
-  position: relative;
-  border-right: 1.5px solid rgb(33, 38, 44);
-  padding: 2.5% 3% 2.5% 1%;
-  width: 7%;
-  margin-right: 0%;
-  transition: all 1s ease;
-  z-index: 1;
-} */
-
 .password-entrance {
   border: 1.5px solid rgb(33, 38, 44);
   padding: 1% 1% 1% 2%;
   display: flex;
   width: 72%;
   margin-top: 4%;
+  align-items: center;
 }
 
 .go-to-server-entrance {
@@ -74,12 +68,25 @@
   font-family: Arial;
   font-size: 16px;
   font-weight: 400;
-  line-height: -1px;
+  line-height: normal;
   letter-spacing: 0px;
   text-align: center;
-  background-color: rgba(1, 1, 1, 0);
-  border: 1px solid black;
+  background-color: transparent;
+  border: 1px solid rgb(33, 38, 44);
   padding: 2% 31% 2% 31%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 4%;
+}
+
+.go-to-server-entrance:hover:not(:disabled) {
+  background-color: rgb(42, 63, 95);
+  color: white;
+}
+
+.go-to-server-entrance:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .openEyesEntr {
@@ -89,13 +96,92 @@
 .openEyesEntr.active {
   width: 8%;
   display: block;
+  cursor: pointer;
 }
 
 .closeEyesEntr.active {
   width: 8%;
   display: block;
+  cursor: pointer;
 }
 
 .closeEyesEntr {
   display: none;
+}
+
+.linkButtonEntrance {
+  background: none;
+  border: none;
+  color: rgb(42, 63, 95);
+  font-family: Arial;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  padding: 0;
+  margin-top: 2%;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  margin-bottom: 0;
+}
+
+.linkButtonEntrance:hover {
+  color: rgb(25, 38, 57);
+}
+
+.link-another {
+  display: flex;
+  justify-content: space-between;
+  width: 75%;
+  margin-top: 3%;
+  margin-bottom: 1%;
+}
+
+.errorEmailPassword {
+  display: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease-in-out;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.errorEmailPassword.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 100px;
+  animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+    max-height: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 100px;
+  }
+}
+
+.errorEmailPassword p {
+  margin: 0;
+  padding: 3% 0 3% 0;
+}
+
+.errorEmailPassword {
+  background-color: #ff4444;
+  border-radius: 5px;
+  padding: 0 1% 0 1%;
+  font-family: Arial;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0px;
+  color: white;
+  width: 75%;
+  text-align: center;
+  margin: 1% 0 0 0;
 }
