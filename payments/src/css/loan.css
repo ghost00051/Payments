@@ -18,6 +18,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 4%;
+  align-items: center;
 }
 .description-of-loan {
   color: rgb(42, 63, 95);
@@ -27,11 +28,6 @@
   line-height: 14px;
   letter-spacing: 0px;
   text-align: left;
-}
-
-html,
-body {
-  /* touch-action: none; */
 }
 
 .loan-go-to-server {
@@ -47,7 +43,28 @@ body {
   padding: 2% 17% 2% 17%;
 }
 
+.perents-of-loan {
+  margin-top: 20%;
+}
 
-.perents-of-loan{
-    margin-top: 20%;
+@media screen and (max-width: 768px) {
+  .name input,
+  .password input,
+  .check-password input,
+  .email input,
+  .telefon input {
+    font-size: 16px !important;
+    transform: scale(1);
+    zoom: 1;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='tel'],
+  input[type='number'] {
+    font-size: 16px;
+    transform: scale(1);
+    max-height: none;
+  }
 }

@@ -49,3 +49,24 @@
   letter-spacing: 0px;
   text-align: center;
 }
+
+@media screen and (max-width: 768px) {
+  .name input,
+  .password input,
+  .check-password input,
+  .email input,
+  .telefon input {
+    font-size: 16px !important;
+    transform: scale(1);
+    zoom: 1;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='tel'] {
+    font-size: 16px;
+    transform: scale(1);
+    max-height: none;
+  }
+}

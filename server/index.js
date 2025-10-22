@@ -5,6 +5,7 @@ const path = require('path')
 const cors = require('cors')
 const fs = require('fs')
 
+
 require('dotenv').config()
 console.log(
   'ENV:',
@@ -12,7 +13,9 @@ console.log(
   process.env.PGUSER,
   process.env.PGPASSWORD
 )
+
 const app = express()
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -1159,7 +1162,6 @@ app.post(
     }
   }
 )
-
 app.get('/payments/history', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId
@@ -1185,9 +1187,23 @@ app.get('/payments/history', authenticateToken, async (req, res) => {
 
     const result = await pool.query(historyQuery, [userId])
 
+    const paymentsWithCorrectDates = result.rows.map(payment => {
+      const dueDate = new Date(payment.due_date)
+      const paidDate = new Date(payment.paid_date)
+
+      const localDueDate = new Date(dueDate.getTime() + 3 * 60 * 60 * 1000)
+      const localPaidDate = new Date(paidDate.getTime() + 3 * 60 * 60 * 1000)
+
+      return {
+        ...payment,
+        due_date: localDueDate.toISOString().split('T')[0],
+        paid_date: localPaidDate.toISOString().split('T')[0]
+      }
+    })
+
     res.status(200).json({
       success: true,
-      payments: result.rows,
+      payments: paymentsWithCorrectDates,
       total_count: result.rows.length
     })
   } catch (error) {
@@ -1214,3 +1230,101 @@ app.get('/download/:filename', authenticateToken, (req, res) => {
     res.status(500).json({ error: 'Ошибка загрузки файла' })
   }
 })
+
+
+app.put('/profile', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { full_name, email, phone } = req.body;
+
+    const userResult = await pool.query(
+      'SELECT id, full_name, email, phone FROM users WHERE id = $1',
+      [userId]
+    );
+
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        error: 'Пользователь не найден'
+      });
+    }
+
+    const currentUser = userResult.rows[0];
+    const updates = [];
+    const values = [];
+    let paramCount = 1;
+
+    if (full_name !== undefined && full_name !== currentUser.full_name) {
+      updates.push(`full_name = $${paramCount}`);
+      values.push(full_name);
+      paramCount++;
+    }
+
+    if (email !== undefined && email !== currentUser.email) {
+      const emailCheck = await pool.query(
+        'SELECT id FROM users WHERE email = $1 AND id != $2',
+        [email, userId]
+      );
+
+      if (emailCheck.rows.length > 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'Этот email уже используется другим пользователем'
+        });
+      }
+
+      updates.push(`email = $${paramCount}`);
+      values.push(email);
+      paramCount++;
+    }
+
+    if (phone !== undefined && phone !== currentUser.phone) {
+      const phoneCheck = await pool.query(
+        'SELECT id FROM users WHERE phone = $1 AND id != $2',
+        [phone, userId]
+      );
+
+      if (phoneCheck.rows.length > 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'Этот телефон уже используется другим пользователем'
+        });
+      }
+
+      updates.push(`phone = $${paramCount}`);
+      values.push(phone);
+      paramCount++;
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Нет данных для обновления'
+      });
+    }
+
+    values.push(userId);
+    
+    const updateQuery = `
+      UPDATE users 
+      SET ${updates.join(', ')}
+      WHERE id = $${paramCount}
+      RETURNING id, full_name, email, phone
+    `;
+
+    const result = await pool.query(updateQuery, values);
+
+    res.status(200).json({
+      success: true,
+      message: 'Данные успешно обновлены',
+      user: result.rows[0]
+    });
+
+  } catch (error) {
+    console.error('Ошибка обновления профиля:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Ошибка сервера'
+    });
+  }
+});

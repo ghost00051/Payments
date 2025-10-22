@@ -9,3 +9,5 @@ payments-auto-start.bat
 payments-background.bat
 start.txt
 ecosystem.config.js
+docker-compose.yml
+Dockerfile

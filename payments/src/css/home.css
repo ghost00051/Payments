@@ -58,7 +58,8 @@
 
 .perents-of-home {
   display: flex;
-  justify-content: center;
+  align-items: flex-start;
+  margin-left: 5%;
 }
 
 .perents-of-home p {
@@ -70,6 +71,7 @@
   letter-spacing: 2px;
   text-align: left;
   margin-bottom: 0;
+  margin-top: 3%;
 }
 
 .perents-of-sum-payments {
@@ -87,7 +89,8 @@
 .flex-perents {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  margin-left: 5%;
 }
 
 .sum-payments {
@@ -253,12 +256,25 @@
   align-items: center;
   gap: 8px;
 }
+.nameOfPerson {
+  color: rgb(42, 63, 95);
+  font-family: Arial;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 23px;
+  letter-spacing: 3px;
+  text-align: left;
+  margin-left: 5%;
+}
 
-/* .toggle-button img {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.3s ease;
-} */
+.nameOfPerson p:nth-child(1) {
+  margin-bottom: 0;
+}
+
+.nameOfPerson p:nth-child(2) {
+  margin-top: 1%;
+  margin-bottom: 0;
+}
 
 .maximaze,
 .minimize {
@@ -511,4 +527,35 @@
 .Upcoming:not(.active):hover {
   color: #ff7f50;
   transform: translateY(-1px);
+}
+
+.nameContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 5%;
+  align-items: center;
+}
+.ShortName {
+  border: 2px solid rgb(42, 63, 95);
+  width: 11vw;
+  height: 5vh;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ShortName p {
+  color: rgb(42, 63, 95);
+  font-family: Arial;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 23px;
+  letter-spacing: 3px;
+  text-align: left;
+  margin: 0;
+}
+
+.nameContainer button{
+  border: none;
+  background: none;
 }

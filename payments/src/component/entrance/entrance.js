@@ -68,19 +68,30 @@ function Entrance () {
             toLoan('/loanParamenrs')
           }
         }
+      } else {
+        console.log('Ошибка входа:', responseData.message)
         if (!response.ok) {
           if (response.status === 401) {
             setErrorMessage('Неверный email или пароль')
+            setShowErrorEntr(true)
+            setTimeout(() => {
+              setShowErrorEntr(false)
+            }, 5000)
           } else if (response.status >= 500) {
             setErrorMessage('Сервис временно недоступен')
+            setShowErrorEntr(true)
+            setTimeout(() => {
+              setShowErrorEntr(false)
+            }, 5000)
           } else {
             setErrorMessage(responseData.error || 'Произошла ошибка')
+            setShowErrorEntr(true)
+            setTimeout(() => {
+              setShowErrorEntr(false)
+            }, 5000)
           }
-          setShowErrorEntr(true)
           return
         }
-      } else {
-        console.log('Ошибка входа:', responseData.message)
       }
     } catch (error) {
       console.log('error')

@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.c74c4fde.css",
+    "main.js": "/static/js/main.4f6e877d.js",
+    "static/js/453.bf740619.chunk.js": "/static/js/453.bf740619.chunk.js",
+    "static/media/close-eyes.svg": "/static/media/close-eyes.708d5e1724e93779e6ba2108ce0882f9.svg",
+    "static/media/download.svg": "/static/media/download.6be4d96c644d090ac8b2f343457b0ec7.svg",
+    "static/media/minimaze.svg": "/static/media/minimaze.bbd9fd63389eaed3512c3afa124b601b.svg",
+    "static/media/maximaze.svg": "/static/media/maximaze.08c0065382be8e1a37934b581f258820.svg",
+    "static/media/open-eyes.svg": "/static/media/open-eyes.fb1e3ae19712638098d30ad321556310.svg",
+    "static/media/telefon.svg": "/static/media/telefon.2ab67b2254ec0c17f91a8398122bb7ec.svg",
+    "static/media/goToPayments.svg": "/static/media/goToPayments.a8cdd42d0cb9281e00fae18434dec4de.svg",
+    "static/media/calendari.svg": "/static/media/calendari.b372cbd0d9e23efc77961efec7f3f39c.svg",
+    "static/media/email.svg": "/static/media/email.58b68e6e209a70ead4401077c0bf1b8e.svg",
+    "static/media/cross.svg": "/static/media/cross.6a45fe2c213a2e1b140f3f5c53fcfff4.svg",
+    "static/media/password.svg": "/static/media/password.3b25c06eec1846c5bbbea776ddfaf579.svg",
+    "index.html": "/index.html",
+    "main.c74c4fde.css.map": "/static/css/main.c74c4fde.css.map",
+    "main.4f6e877d.js.map": "/static/js/main.4f6e877d.js.map",
+    "453.bf740619.chunk.js.map": "/static/js/453.bf740619.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c74c4fde.css",
+    "static/js/main.4f6e877d.js"
+  ]
+}

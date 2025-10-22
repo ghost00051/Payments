@@ -84,7 +84,7 @@ function LoanParameters () {
       console.log('Ответ сервера:', data)
       alert('Рассрочка успешно создана!')
       if (response.ok) {
-        toMain('/home')
+        toMain('/main')
       }
     } catch (error) {
       console.error('Ошибка:', error.message || error)

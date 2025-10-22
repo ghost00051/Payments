@@ -91,7 +91,7 @@ function History () {
               >
                 <p className='number-of-history'>{index + 1}</p>
                 <p className='date-of-history'>
-                  {histories.due_date.slice(0, 10)}
+                  {new Date(histories.due_date).toLocaleDateString('ru-RU')}
                 </p>
                 <p className='amount-of-history'>{histories.amount}₽</p>
                 {histories.photo_path && (

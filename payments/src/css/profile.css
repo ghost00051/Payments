@@ -1,0 +1,106 @@
+.parrentsProfileBlock {
+  min-height: 96vh;
+  display: flex;
+  flex-direction: column;
+}
+.loadingOfProfile,
+.LogOutButton {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 24px;
+  box-shadow: 0px 0px 24px -6px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 1);
+  padding: 0 5% 0 5%;
+}
+
+.leftBlocksFirstPages,
+.leftBlocksSecondPage {
+  display: flex;
+  width: 100%;
+}
+.leftBlocksFirstPages p {
+  color: rgba(42, 63, 95, 1);
+  font-family: Poppins;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0%;
+  text-align: center;
+  margin-left: 3%;
+}
+
+.leftBlocksSecondPage p {
+  color: rgb(255, 0, 0);
+  font-family: Poppins;
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0%;
+  text-align: center;
+  margin-left: 3%;
+}
+
+.godBlocksofMain {
+  flex: 1;
+}
+
+.paugesOfPayments,
+.SecPaugesOfPayments {
+  margin: 0 5% 5% 5%;
+}
+
+.footerOfProfile div {
+  display: flex;
+  flex-direction: column;
+  align-self: self-end;
+  align-items: center;
+  object-fit: contain;
+}
+
+.footerOfProfile div img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  margin-bottom: 12%;
+}
+.footerOfProfile {
+  display: flex;
+  margin: 0 5% 0 5%;
+  align-items: center;
+  justify-content: space-around;
+}
+.footerOfProfile div p {
+  margin: 0;
+  color: rgba(151, 151, 151, 1);
+  font-family: Poppins;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 12px;
+  letter-spacing: 0%;
+  text-align: center;
+}
+
+.parrentsOffooterOfProfile {
+  background: white;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.headerOfBlockProfile {
+  margin-left: 5%;
+}
+
+.headerOfBlockProfile p {
+  color: rgba(0, 33, 78, 1);
+  font-family: Poppins;
+  font-size: 35px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: 0%;
+  text-align: left;
+}
+
