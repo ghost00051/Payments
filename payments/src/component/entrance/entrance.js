@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../../css/entrance.css'
 import emailsvg from '../../img/email.svg'
@@ -12,27 +12,33 @@ function Entrance () {
   const [passwordType, setPasswordType] = useState('password')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [showErrorEntr, setShowErrorEntr] = useState(false)
+  const [isLoading, setIsloading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const toHome = useNavigate()
   const toLoan = useNavigate()
 
-  const togglepassword = () => {
+  const togglepassword = useCallback(() => {
     setPasswordType(passwordType === 'password' ? 'text' : 'password')
-  }
+  }, [passwordType])
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const userId = await getProfile()
-  //     if (userId) {
-  //       await getinstallments(userId)
-  //     }
-  //   }
-  //   fetchData()
-  // }, [])
+  const validateEmail = email => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
 
   const entrance = async event => {
     event.preventDefault()
+    if (isLoading) return
+
+    if (!validateEmail(email)) {
+      setShowErrorEntr(true)
+      return
+    }
+
+    setShowErrorEntr(false)
+    setIsloading(true)
     try {
-      const serv = await fetch('http://91.223.89.222:30001/login', {
+      const response = await fetch('http://91.223.89.222:30001/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -42,11 +48,11 @@ function Entrance () {
           password
         })
       })
-      const servData = await serv.json()
-      console.log('Response Status:', serv.status)
-      console.log('Response Data:', servData)
-      if (serv.ok) {
-        localStorage.setItem('token', servData.token)
+      const responseData = await response.json()
+      console.log('Response Status:', response.status)
+      console.log('Response Data:', responseData)
+      if (response.ok) {
+        localStorage.setItem('token', responseData.token)
         const userId = await getProfile()
 
         if (userId) {
@@ -62,11 +68,24 @@ function Entrance () {
             toLoan('/loanParamenrs')
           }
         }
+        if (!response.ok) {
+          if (response.status === 401) {
+            setErrorMessage('Неверный email или пароль')
+          } else if (response.status >= 500) {
+            setErrorMessage('Сервис временно недоступен')
+          } else {
+            setErrorMessage(responseData.error || 'Произошла ошибка')
+          }
+          setShowErrorEntr(true)
+          return
+        }
       } else {
-        console.log('Ошибка входа:', servData.message)
+        console.log('Ошибка входа:', responseData.message)
       }
     } catch (error) {
       console.log('error')
+    } finally {
+      setIsloading(false)
     }
   }
 
@@ -134,6 +153,11 @@ function Entrance () {
     <div className='perents-for-entrance'>
       <p className='header-of-entrance'>Вход</p>
       <form onSubmit={entrance}>
+        {showErrorEntr && (
+          <div className='errorEmailPassword active'>
+            <p>{errorMessage}</p>
+          </div>
+        )}
         <label className='email-entrance'>
           <img src={emailsvg} alt='Email' />
           <input
@@ -175,11 +199,19 @@ function Entrance () {
           />
         </label>
         <div className='link-another'>
-          <p onClick={resetPassword}>Забыли пароль?</p>
-          <p onClick={registration}>Регистрация</p>
+          <button onClick={resetPassword} className='linkButtonEntrance'>
+            Забыли пароль?
+          </button>
+          <button className='linkButtonEntrance' onClick={registration}>
+            Регистрация
+          </button>
         </div>
-        <button type='submit' className='go-to-server-entrance'>
-          Войти
+        <button
+          type='submit'
+          className='go-to-server-entrance'
+          disabled={isLoading}
+        >
+          {isLoading ? 'Вход...' : 'Войти'}
         </button>
       </form>
     </div>
