@@ -8,11 +8,12 @@ function ResetPassword () {
   const [password, setPassword] = useState('')
   const token = searchParams.get('token')
   const toMain = useNavigate()
+  const API_URL = 'https://split-fiction.ru';
 
   const resetPas = async event => {
     event.preventDefault()
     try {
-      const response = await fetch('http://91.223.89.222:30001/reset-password', {
+      const response = await fetch(`${API_URL}/reset-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -18,11 +18,12 @@ function ProfileDecription () {
     phone: ''
   })
   const [tempData, setTempData] = useState({ ...userData })
+  const API_URL = 'https://split-fiction.ru';
 
   const getProfile = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://91.223.89.222:30001/profile', {
+      const response = await fetch(`${API_URL}/profile`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -53,7 +54,7 @@ function ProfileDecription () {
   const editProfile = async field => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://91.223.89.222:30001/profile', {
+      const response = await fetch(`${API_URL}/profile`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,

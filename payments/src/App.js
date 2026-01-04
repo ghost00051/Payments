@@ -6,11 +6,10 @@ import openEyes from './img/open-eyes.svg'
 import emailSvg from './img/email.svg'
 import telefon from './img/telefon.svg'
 import { useNavigate } from 'react-router-dom'
+import Version from './component/version/version'
 
 function App () {
-  const navigation = useNavigate()
-  const entrance = useNavigate()
-  const forgot = useNavigate()
+  const navigate = useNavigate()
   const [helloClass, setHelloClass] = useState('Hello')
   const [introClass, setIntroClass] = useState('lets-g')
   const [Weikup, setWeikup] = useState('Weikup')
@@ -65,11 +64,11 @@ function App () {
   }, [])
 
   const reload = () => {
-    entrance('/entrance')
+    navigate('/entrance')
   }
 
   const goForgot = () => {
-    forgot('/forgot')
+    navigate('/forgot')
   }
 
   const formatPhoneNumber = useCallback(value => {
@@ -168,7 +167,7 @@ function App () {
       console.log('Response Data:', responseData)
       if (response.ok) {
         localStorage.setItem('token', responseData.token)
-        navigation('/loanParamenrs')
+        navigate('/loanParamenrs')
       } else {
         console.log('Ошибка регистрации')
         if (responseData.error === 'Этот email уже зарегистрирован') {
@@ -201,18 +200,18 @@ function App () {
           }
         })
         if (response.ok) {
-          navigation('/main')
+          navigate('/main')
         } else {
           localStorage.removeItem('token')
-          navigation('')
+          navigate('')
         }
       } catch (error) {
         console.error('Ошибка проверки токена:', error)
         localStorage.removeItem('token')
-        navigation('')
+        navigate('')
       }
     },
-    [API_URL, navigation]
+    [API_URL, navigate]
   )
 
   useEffect(() => {
@@ -220,10 +219,11 @@ function App () {
     if (token) {
       checkTokenValidity(token)
     }
-  }, [navigation, checkTokenValidity])
+  }, [navigate, checkTokenValidity])
 
   return (
     <div className='App'>
+      <Version />
       <p id='Hello' className={helloClass}>
         Привет!
       </p>
@@ -233,8 +233,8 @@ function App () {
       <div id='Weikup' className={Weikup}>
         <p className='header-of-form'>Регистрация</p>
         <form onSubmit={registration}>
-          <p className='descriptionOfLabel'>Введите имя</p>
-          <label className='name'>
+          {/* <p className='descriptionOfLabel'>Введите имя</p> */}
+          <label className='name' data-label='Введите имя'>
             <img src={face} alt='Лицо' loading='lazy' />
             <input
               type='text'
@@ -242,6 +242,7 @@ function App () {
               value={full_name}
               onChange={e => setFull_name(e.target.value)}
               autoComplete='name'
+              placeholder='Введите имя'
               required
             />
           </label>
@@ -250,13 +251,14 @@ function App () {
               <p>Такой email уже существует</p>
             </div>
           )}
-          <p className='descriptionOfLabel'>Введите email</p>
-          <label className='email'>
+          {/* <p className='descriptionOfLabel'>Введите email</p> */}
+          <label className='email' data-label='Введите email'>
             <img src={emailSvg} alt='почта' loading='lazy' />
             <input
               type='email'
               name='email'
               onChange={e => setEmail(e.target.value)}
+              placeholder='Введите email'
               required
             />
           </label>
@@ -270,8 +272,8 @@ function App () {
               <p>Пароль должен содержать минимум 6 символов</p>
             </div>
           )}
-          <p className='descriptionOfLabel'>Введите пароль</p>
-          <label className='password'>
+          {/* <p className='descriptionOfLabel'>Введите пароль</p> */}
+          <label className='password' data-label='Введите пароль'>
             <svg
               className={noColor}
               width='16.000000'
@@ -297,6 +299,7 @@ function App () {
                 setText1(e.target.value)
                 setPassword(e.target.value)
               }}
+              placeholder='Введите пароль'
               required
             />
             <img
@@ -317,8 +320,8 @@ function App () {
               loading='lazy'
             />
           </label>
-          <p className='descriptionOfLabel'>Введите повторно пароль</p>
-          <label className='check-password'>
+          {/* <p className='descriptionOfLabel'>Введите повторно пароль</p> */}
+          <label className='check-password' data-label='Введите повторно пароль'>
             <svg
               className={noColor}
               width='16.000000'
@@ -339,6 +342,7 @@ function App () {
               type={secpasswordType}
               name='password'
               onChange={e => setText2(e.target.value)}
+              placeholder='Введите повторно пароль'
               required
             />
             <img
@@ -366,7 +370,7 @@ function App () {
               <p>Такой телефон уже существует</p>
             </div>
           )}
-          <p className='descriptionOfLabel'>Введите номер телефона</p>
+          {/* <p className='descriptionOfLabel'>Введите номер телефона</p> */}
           <label className='telefon'>
             <img src={telefon} alt='телефон' loading='lazy' />
             <input

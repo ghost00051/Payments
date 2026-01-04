@@ -6,6 +6,7 @@ function Forgot () {
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const API_URL = 'https://split-fiction.ru';
 
   const forgot = async event => {
     event.preventDefault()
@@ -13,7 +14,7 @@ function Forgot () {
     setMessage('')
 
     try {
-      const response = await fetch('http://91.223.89.222:30001/forgot-password', {
+      const response = await fetch(`${API_URL}/forgot-password`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

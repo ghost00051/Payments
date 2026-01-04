@@ -5,7 +5,6 @@ const path = require('path')
 const cors = require('cors')
 const fs = require('fs')
 
-
 require('dotenv').config()
 console.log(
   'ENV:',
@@ -15,8 +14,7 @@ console.log(
 )
 
 const app = express()
-app.use(express.static(path.join(__dirname, 'client/build')));
-
+const PORT = process.env.PORT || 30001;
 app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
@@ -34,40 +32,31 @@ app.get('/health', (req, res) => {
   })
 })
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (
-        !origin ||
-        origin.includes('://localhost') ||
-        origin.includes('://192.168') ||
-        origin.includes('://91.223.89.222')
-      ) {
-        return callback(null, true)
-      }
 
-      const allowedPatterns = [
-        /^https?:\/\/localhost(:\d+)?$/,
-        /^https?:\/\/192\.168\.\d+\.\d+(:\d+)?$/,
-        /^https?:\/\/91\.223\.89\.222(:\d+)?$/,
-        /^https?:\/\/.*$/
-      ]
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
+  console.log('Protocol:', req.protocol);
+  console.log('Secure:', req.secure);
+  console.log('X-Forwarded-Proto:', req.headers['x-forwarded-proto']);
+  console.log('Origin:', req.headers.origin);
+  next();
+});
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://split-fiction.ru',
+    'https://split-fiction.ru',
+    'http://www.split-fiction.ru',
+    'https://www.split-fiction.ru',
+    'https://splitfiction.ru'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}))
 
-      if (allowedPatterns.some(pattern => pattern.test(origin))) {
-        return callback(null, true)
-      }
 
-      console.log('CORS blocked for origin:', origin)
-      callback(new Error('Not allowed by CORS'))
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    credentials: true,
-    exposedHeaders: ['Authorization']
-  })
-)
-
-app.use(express.json())
 
 const pool = new Pool({
   user: process.env.PGUSER,
@@ -715,41 +704,33 @@ app.post('/login', async (req, res) => {
     })
   }
 })
-
-function authenticateToken (req, res, next) {
-  if (req.method === 'OPTIONS') return next()
-
-  const authHeader =
-    req.headers['authorization'] || req.headers['Authorization']
-
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization']
+  
   if (!authHeader) {
-    console.log('Authorization header is missing')
     return res.status(401).json({
       success: false,
       error: 'Требуется аутентификация'
     })
   }
-
-  const token = authHeader.trim().split(/\s+/)[1]
-
+  
+  const token = authHeader.split(' ')[1]
+  
   if (!token) {
-    console.log('Malformed authorization header:', authHeader)
     return res.status(401).json({
       success: false,
       error: 'Неверный формат токена'
     })
   }
-
+  
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
-      console.log('Token verification failed:', err.message)
       return res.status(403).json({
         success: false,
         error: 'Недействительный токен'
       })
     }
-
-    // console.log('Authenticated user ID:', user.userId)
+    
     req.user = user
     next()
   })
@@ -831,16 +812,6 @@ app.put(
     }
   }
 )
-
-const PORT = process.env.SERVER_PORT || 30001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`)
-  console.log('Headers:', req.headers)
-  next()
-})
 
 async function updateInstallmentPaidAmount (installmentId) {
   try {
@@ -1328,3 +1299,22 @@ app.put('/profile', authenticateToken, async (req, res) => {
     });
   }
 });
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server running on port ${PORT}`)
+  console.log(`🌐 Local: http://localhost:${PORT}`)
+  console.log(`🌐 Network: http://${getLocalIp()}:${PORT}`)
+  console.log(`🌐 External: http://91.223.88.222:${PORT}`)
+})
+
+function getLocalIp() {
+  const interfaces = require('os').networkInterfaces()
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address
+      }
+    }
+  }
+  return '127.0.0.1'
+}

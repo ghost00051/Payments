@@ -18,7 +18,7 @@ root.render(
     <Router>
       <Routes>
         <Route path='/' element={<App />} />
-        <Route path='/loanParamenrs' element={<LoanParameters />} />
+        <Route path='/loanParameters' element={<LoanParameters />} />
         <Route path='/entrance' element={<Entrance />} />
         <Route path='/main' element={<Main />} />
         <Route path='/forgot' element={<Forgot />} />

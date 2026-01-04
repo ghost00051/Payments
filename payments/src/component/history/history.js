@@ -5,12 +5,13 @@ import '../../css/history.css'
 
 function History () {
   const [historyVis, setHistoryVis] = useState([])
+  const API_URL = 'https://split-fiction.ru';
 
   const getInstallmens = async () => {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        'http://91.223.89.222:30001/payments/history',
+        `${API_URL}/payments/history`,
         {
           method: 'GET',
           headers: {
@@ -40,7 +41,7 @@ function History () {
       const token = localStorage.getItem('token')
 
       const filename = photoPath.split('\\').pop()
-      const downloadUrl = `http://91.223.89.222:30001/download/${filename}`
+      const downloadUrl = `${API_URL}/download/${filename}`
 
       const response = await fetch(downloadUrl, {
         method: 'GET',

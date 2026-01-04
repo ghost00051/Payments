@@ -33,6 +33,7 @@ function Home () {
   const upcomingRef = useRef(null)
   const historyRef = useRef(null)
   const toProfile = useNavigate()
+  const API_URL = 'https://split-fiction.ru';
 
   const handleBlur = () => {
     setShowModal(false)
@@ -41,7 +42,7 @@ function Home () {
   const getProfile = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://91.223.89.222:30001/profile', {
+      const response = await fetch(`${API_URL}/profile`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -70,7 +71,7 @@ function Home () {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        `http://91.223.89.222:30001/installments/${userId}`,
+        `${API_URL}/installments/${userId}`,
         {
           method: 'GET',
           headers: {
@@ -110,7 +111,7 @@ function Home () {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        `http://91.223.89.222:30001/payments/installment/${datainstel}`,
+        `${API_URL}/payments/installment/${datainstel}`,
         {
           method: 'GET',
           headers: {
@@ -170,7 +171,7 @@ function Home () {
       formData.append('due_date', due_date)
       formData.append('photo', photo)
 
-      const response = await fetch('http://91.223.89.222:30001/payments', {
+      const response = await fetch(`${API_URL}/payments`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`

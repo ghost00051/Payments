@@ -8,6 +8,7 @@ function LoanParameters () {
   const [startDate, setStartDate] = useState('')
   const [roundPaymentsTo, setRoundPaymentsTo] = useState('0')
   const [userId, setUserId] = useState(null)
+  const API_URL = 'https://split-fiction.ru';
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -20,7 +21,7 @@ function LoanParameters () {
   const getProfile = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://91.223.89.222:30001/profile', {
+      const response = await fetch(`${API_URL}/profile`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,7 +44,7 @@ function LoanParameters () {
   const calculateEndDate = (startDate, monthsToAdd) => {
     const date = new Date(startDate)
     date.setMonth(date.getMonth() + monthsToAdd)
-    return date.toISOString().split('T')[0] // Возвращает "YYYY-MM-DD"
+    return date.toISOString().split('T')[0]
   }
   const toMain = useNavigate()
 
@@ -64,7 +65,7 @@ function LoanParameters () {
 
       const endDate = calculateEndDate(startDate, paymentsCountNum)
 
-      const response = await fetch('http://91.223.89.222:30001/installments', {
+      const response = await fetch(`${API_URL}/installments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

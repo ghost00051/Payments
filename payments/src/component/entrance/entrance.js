@@ -17,6 +17,7 @@ function Entrance () {
   const [errorMessage, setErrorMessage] = useState('')
   const toHome = useNavigate()
   const toLoan = useNavigate()
+  const API_URL = 'https://split-fiction.ru'
 
   const togglepassword = useCallback(() => {
     setPasswordType(passwordType === 'password' ? 'text' : 'password')
@@ -38,7 +39,7 @@ function Entrance () {
     setShowErrorEntr(false)
     setIsloading(true)
     try {
-      const response = await fetch('http://91.223.89.222:30001/login', {
+      const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -111,7 +112,7 @@ function Entrance () {
   const getProfile = async () => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://91.223.89.222:30001/profile', {
+      const response = await fetch(`${API_URL}/profile`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -136,18 +137,15 @@ function Entrance () {
   const getinstallments = async userId => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(
-        `http://91.223.89.222:30001/installments/${userId}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          mode: 'cors'
-        }
-      )
+      const response = await fetch(`${API_URL}/installments/${userId}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        mode: 'cors'
+      })
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -169,15 +167,17 @@ function Entrance () {
             <p>{errorMessage}</p>
           </div>
         )}
-        <label className='email-entrance'>
+        <label className='email-entrance' data-label='Введите email'>
           <img src={emailsvg} alt='Email' />
           <input
             type='email'
             name='email'
             onChange={e => setEmail(e.target.value)}
+            placeholder='Введите email'
+            required
           />
         </label>
-        <label className='password-entrance'>
+        <label className='password-entrance' data-label='Введите пароль'>
           <img
             className='img-for-entarnce'
             src={passwordsvg}
@@ -188,6 +188,7 @@ function Entrance () {
             id='first-input-of-switch'
             name='password'
             autoComplete='current-password'
+            placeholder='Введите пароль'
             required
             onChange={e => setPassword(e.target.value)}
           />
