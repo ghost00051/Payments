@@ -10,9 +10,6 @@ import Version from './component/version/version'
 
 function App () {
   const navigate = useNavigate()
-  const [helloClass, setHelloClass] = useState('Hello')
-  const [introClass, setIntroClass] = useState('lets-g')
-  const [Weikup, setWeikup] = useState('Weikup')
   const [passwordType, setPasswordType] = useState('password')
   const [secpasswordType, setSecpasswordType] = useState('password')
   const [text1, setText1] = useState('')
@@ -35,25 +32,6 @@ function App () {
     }
   }, [normalizedText1, normalizedText2])
 
-  useEffect(() => {
-    const helloTimeout = setTimeout(() => {
-      setHelloClass('Hello remove')
-    }, 1000)
-
-    const introTimeout = setTimeout(() => {
-      setIntroClass('lets-g add')
-    }, 3000)
-
-    const Weikup = setTimeout(() => {
-      setWeikup('Weikup explation')
-    }, 8000)
-
-    return () => {
-      clearTimeout(helloTimeout)
-      clearTimeout(introTimeout)
-      clearTimeout(Weikup)
-    }
-  }, [])
 
   const togglepassword = useCallback(() => {
     setPasswordType(prev => (prev === 'password' ? 'text' : 'password'))
@@ -224,13 +202,7 @@ function App () {
   return (
     <div className='App'>
       <Version />
-      <p id='Hello' className={helloClass}>
-        Привет!
-      </p>
-      <p id='lets-get' className={introClass}>
-        Давай познакомимся!
-      </p>
-      <div id='Weikup' className={Weikup}>
+      <div id='Weikup' className='Weikup'>
         <p className='header-of-form'>Регистрация</p>
         <form onSubmit={registration}>
           {/* <p className='descriptionOfLabel'>Введите имя</p> */}

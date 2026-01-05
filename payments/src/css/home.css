@@ -1,6 +1,6 @@
 .progress-bar {
   height: 10px;
-  background-color: rgb(255, 195, 173);
+  background-color: rgba(45, 65, 95, 0.438);
   border-radius: 10px;
   overflow: hidden;
   position: relative;
@@ -9,7 +9,7 @@
 
 .progress-fill {
   height: 100%;
-  background-color: rgb(255, 127, 80);
+  background-color: rgb(42, 63, 95);
   transition: width 0.5s ease-in-out;
 }
 
@@ -102,6 +102,7 @@
   letter-spacing: 3px;
   text-align: left;
   margin-top: 0;
+  margin-bottom: 2%;
 }
 
 .calendari-of-next-payments div {
@@ -121,7 +122,7 @@
   justify-content: space-between;
   margin-right: 5%;
   margin-left: 5%;
-  border-bottom: 2px solid rgb(255, 127, 80);
+  border-bottom: 2px solid rgb(42, 63, 95);
   border-radius: 1px;
 }
 
@@ -154,7 +155,8 @@
   line-height: 18px;
   letter-spacing: 3px;
   text-align: center;
-  margin-bottom: 2%;
+  margin-bottom: 3%;
+  margin-top: 2%;
 }
 
 .god-of-counter {
@@ -162,6 +164,7 @@
   justify-content: space-between;
   margin-right: 5%;
   margin-left: 5%;
+  margin-bottom: 2%;
 }
 
 .header-of-god-of-counter {
@@ -242,7 +245,7 @@
 .toggle-button {
   margin: 20px auto 0;
   padding: 8px 55px 8px 55px;
-  background: #ff7f50;
+  background: rgb(42, 63, 95);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -269,6 +272,7 @@
 
 .nameOfPerson p:nth-child(1) {
   margin-bottom: 0;
+  font-size: 14px;
 }
 
 .nameOfPerson p:nth-child(2) {
@@ -291,7 +295,7 @@
 .button-vision-go-to-payments {
   margin: 20px auto 0;
   padding: 10px 30px 10px 30px;
-  background: #ff7f50;
+  background: rgb(42, 63, 95);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -399,7 +403,7 @@
   margin-top: 6%;
   border: none;
   padding: 3% 22% 3% 22%;
-  background-color: rgb(255, 127, 80);
+  background-color: rgb(42, 63, 95);
   border-radius: 10px;
   margin-bottom: 6%;
 }
@@ -407,7 +411,7 @@
 .paymentsMade {
   margin: 20px auto 0;
   padding: 10px 30px 10px 30px;
-  background: #ff7f50;
+  background: rgb(42, 63, 95);
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -456,7 +460,7 @@
   border: none;
   padding: 3% 5% 3% 4%;
   transition: color 0.3s ease;
-  margin: 0 10px;
+  margin: 0 2px;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -514,7 +518,7 @@
 
 .active-indicator {
   position: absolute;
-  background: #ff7f50;
+  background: rgb(42, 63, 95);
   border-radius: 20px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   top: 2px;
@@ -525,7 +529,7 @@
 
 .History:not(.active):hover,
 .Upcoming:not(.active):hover {
-  color: #ff7f50;
+  color: rgb(42, 63, 95);
   transform: translateY(-1px);
 }
 
@@ -555,7 +559,7 @@
   margin: 0;
 }
 
-.nameContainer button{
+.nameContainer button {
   border: none;
   background: none;
 }

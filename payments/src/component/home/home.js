@@ -8,6 +8,7 @@ import goToPayments from '../../img/goToPayments.svg'
 import crossForm from '../../img/cross.svg'
 import History from '../history/history'
 import { useNavigate } from 'react-router-dom'
+import Version from '../version/version'
 
 function Home () {
   const [item, setItem] = useState(null)
@@ -33,7 +34,7 @@ function Home () {
   const upcomingRef = useRef(null)
   const historyRef = useRef(null)
   const toProfile = useNavigate()
-  const API_URL = 'https://split-fiction.ru';
+  const API_URL = 'https://split-fiction.ru'
 
   const handleBlur = () => {
     setShowModal(false)
@@ -70,18 +71,15 @@ function Home () {
   const getCredit = async userId => {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(
-        `${API_URL}/installments/${userId}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          mode: 'cors'
-        }
-      )
+      const response = await fetch(`${API_URL}/installments/${userId}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        mode: 'cors'
+      })
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
@@ -286,10 +284,10 @@ function Home () {
 
   return (
     <div className='home-container'>
+      <Version />
       <div className='nameContainer'>
         <div className='nameOfPerson'>
-          <p>С возвращением,</p>
-          <p>{useName}</p>
+          <p>С возвращением, {useName}</p>
         </div>
         <button onClick={GoToProfile}>
           <div className='ShortName'>
