@@ -236,7 +236,14 @@ function Home () {
       })
     }
   }
-
+  const formatDate = dateString => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    })
+  }
   const tabVariants = {
     hidden: {
       opacity: 0,
@@ -484,40 +491,128 @@ function Home () {
                 <img onClick={handleBlur} src={crossForm} alt='закрыть' />
               </div>
               <div className='labels-form-go-to-server-payments-main'>
-                <label>
-                  <p className='header-of-form-get-to-payments header-of-form-get-to-payments-1'>
+                <label className='summaOfPay' data-label='Введите сумму'>
+                  {/* <p className='header-of-form-get-to-payments header-of-form-get-to-payments-1'>
                     Введите сумму
-                  </p>
+                  </p> */}
                   <input
                     className='number-of-form-get-to-payments'
                     type='number'
                     onChange={e => setAmount(e.target.value)}
+                    placeholder='Введите сумму'
                     required
                   />
                 </label>
-                <label>
-                  <p className='header-of-form-get-to-payments date-header-of-form-get-to-payments'>
-                    Выберите дату
-                  </p>
-                  <input
-                    className='date-of-form-get-to-payments'
-                    type='date'
-                    onChange={e => setDue_date(e.target.value)}
-                    required
-                  />
+                <label className='dateOfFormGetToPayments mobile-date-input'>
+                  <div className='date-input-wrapper'>
+                    <span className='date-label'>Дата оплаты</span>
+                    <input
+                      type='date'
+                      onChange={e => setDue_date(e.target.value)}
+                      value={due_date}
+                      required
+                      aria-label='Дата оплаты'
+                    />
+                    <div className='date-display'>
+                      {due_date ? formatDate(due_date) : 'Выберите дату'}
+                    </div>
+                    <div className='date-icon'>
+                      <svg
+                        width='24'
+                        height='24'
+                        viewBox='0 0 24 24'
+                        fill='none'
+                      >
+                        <rect
+                          x='3'
+                          y='6'
+                          width='18'
+                          height='15'
+                          rx='2'
+                          stroke='currentColor'
+                          strokeWidth='1.5'
+                        />
+                        <path
+                          d='M3 10H21'
+                          stroke='currentColor'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                        />
+                        <path
+                          d='M8 3V6'
+                          stroke='currentColor'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                        />
+                        <path
+                          d='M16 3V6'
+                          stroke='currentColor'
+                          strokeWidth='1.5'
+                          strokeLinecap='round'
+                        />
+                      </svg>
+                    </div>
+                  </div>
                 </label>
-                <label>
-                  <p className='header-of-form-get-to-payments'>
-                    Загрузите чек
-                  </p>
-                  <input
-                    className='file-of-form-get-to-payments'
-                    type='file'
-                    onChange={e => setPhoto(e.target.files[0])}
-                    setPhoto
-                    ref={fileInputRef}
-                    required
-                  />
+                <label className='mobile-file-upload'>
+                  {/* <p className='upload-header'>Загрузите чек</p> */}
+                  <div className='file-upload-wrapper'>
+                    <input
+                      type='file'
+                      onChange={e => setPhoto(e.target.files[0])}
+                      ref={fileInputRef}
+                      accept='image/*'
+                      required
+                      aria-label='Загрузить чек'
+                    />
+                    <div className='upload-area'>
+                      <div className='upload-icon'>
+                        <svg
+                          width='32'
+                          height='32'
+                          viewBox='0 0 24 24'
+                          fill='none'
+                        >
+                          <path
+                            d='M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M17 8L12 3M12 3L7 8M12 3V15'
+                            stroke='#6B7280'
+                            strokeWidth='2'
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
+                          />
+                        </svg>
+                      </div>
+                      <div className='upload-text'>
+                        <div className='upload-title'>Нажмите для загрузки</div>
+                        <div className='upload-subtitle'>
+                          Поддерживаемые форматы: JPG, PNG
+                        </div>
+                      </div>
+                    </div>
+                    {photo && (
+                      <div className='file-preview'>
+                        <div className='file-info'>
+                          <div className='file-name'>{photo.name}</div>
+                          <div className='file-size'>
+                            {(photo.size / 1024).toFixed(0)} KB
+                          </div>
+                        </div>
+                        <button
+                          type='button'
+                          className='remove-file'
+                          onClick={e => {
+                            e.stopPropagation()
+                            setPhoto(null)
+                            if (fileInputRef.current)
+                              fileInputRef.current.value = ''
+                          }}
+                          aria-label='Удалить файл'
+                        >
+                          ×
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </label>
               </div>
               <div className='button-form-go-to-server-payments'>
