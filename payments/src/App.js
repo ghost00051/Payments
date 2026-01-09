@@ -145,7 +145,7 @@ function App () {
       console.log('Response Data:', responseData)
       if (response.ok) {
         localStorage.setItem('token', responseData.token)
-        navigate('/loanParamenrs')
+        navigate('/loanParameters')
       } else {
         console.log('Ошибка регистрации')
         if (responseData.error === 'Этот email уже зарегистрирован') {

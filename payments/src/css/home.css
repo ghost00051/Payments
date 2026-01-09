@@ -251,7 +251,8 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  width: 76%;
+  width: max-content;
+  white-space: nowrap;
 }
 
 .button-content {

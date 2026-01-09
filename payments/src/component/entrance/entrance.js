@@ -66,7 +66,7 @@ function Entrance () {
           if (numberOfInstallmens >= 1) {
             toHome('/main')
           } else {
-            toLoan('/loanParamenrs')
+            toLoan('/loanParameters')
           }
         }
       } else {

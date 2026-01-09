@@ -41,6 +41,7 @@ app.use((req, res, next) => {
   console.log('Origin:', req.headers.origin);
   next();
 });
+
 app.use(cors({
   origin: [
     'http://localhost:3000',
@@ -56,6 +57,9 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 
 const pool = new Pool({
@@ -562,8 +566,6 @@ app.get('/installments/:id', async (req, res) => {
   }
 })
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'client/build')))
 const bcrypt = require('bcrypt')
 const saltRounds = 10

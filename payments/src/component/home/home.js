@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import '../../css/home.css'
 import calendari from '../../img/calendari.svg'
@@ -10,7 +10,7 @@ import History from '../history/history'
 import { useNavigate } from 'react-router-dom'
 import Version from '../version/version'
 
-function Home () {
+function Home() {
   const [item, setItem] = useState(null)
   const [debest, setDebest] = useState(null)
   const [minusamount, setMinusAmount] = useState(0)
@@ -39,8 +39,7 @@ function Home () {
   const handleBlur = () => {
     setShowModal(false)
   }
-
-  const getProfile = async () => {
+  const getProfile = useCallback(async () => {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(`${API_URL}/profile`, {
@@ -66,9 +65,8 @@ function Home () {
       alert('Ошибка при загрузке профиля')
       return null
     }
-  }
-
-  const getCredit = async userId => {
+  }, [API_URL])
+  const getCredit = useCallback(async userId => {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(`${API_URL}/installments/${userId}`, {
@@ -103,7 +101,7 @@ function Home () {
       console.error('Error fetching credit:', error)
       return null
     }
-  }
+  }, [API_URL])
 
   const getPayments = async datainstel => {
     try {
@@ -182,7 +180,9 @@ function Home () {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
-
+      if (response.ok) {
+        setShowModal(false)
+      }
       setItem(prev => ({
         ...prev,
         total_amount: prev.total_amount - parseFloat(amount)
@@ -193,13 +193,15 @@ function Home () {
     }
   }
 
-  const toggleExpand = () => {
+  const toggleExpand = useCallback(() => {
     if (visibleCount >= installmens.length) {
       setVisibleCount(4)
+      setIsExpanded(false)
     } else {
       setVisibleCount(prev => Math.min(prev + 4, installmens.length))
+      setIsExpanded(true)
     }
-  }
+  }, [visibleCount, installmens.length])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -209,7 +211,7 @@ function Home () {
       }
     }
     fetchData()
-  }, [])
+  }, [getCredit, getProfile])
 
   useEffect(() => {
     if (totalamount > 0 && minusamount >= 0) {
@@ -220,11 +222,7 @@ function Home () {
     }
   }, [totalamount, minusamount])
 
-  useEffect(() => {
-    updateIndicator()
-  }, [activeTab])
-
-  const updateIndicator = () => {
+  const updateIndicator = useCallback(() => {
     const activeElement =
       activeTab === 'upcoming' ? upcomingRef.current : historyRef.current
 
@@ -235,7 +233,12 @@ function Home () {
         width: `${offsetWidth}px`
       })
     }
-  }
+  }, [activeTab])
+  
+  useEffect(() => {
+    updateIndicator()
+  }, [activeTab, updateIndicator])
+
   const formatDate = dateString => {
     const date = new Date(dateString)
     return date.toLocaleDateString('ru-RU', {

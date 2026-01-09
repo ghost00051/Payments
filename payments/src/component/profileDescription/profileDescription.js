@@ -67,7 +67,6 @@ function ProfileDecription () {
         })
       })
       if (response.ok) {
-        const updatedData = await response.json()
         setUserData({
           ...userData,
           [field]: tempData[field]

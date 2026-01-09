@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import '../../css/loan.css'
 import { useNavigate } from 'react-router-dom'
 
-function LoanParameters () {
+function LoanParameters() {
   const [totalAmount, setTotalAmount] = useState('')
   const [paymentsCount, setPaymentsCount] = useState('')
   const [startDate, setStartDate] = useState('')
@@ -76,15 +76,15 @@ function LoanParameters () {
           total_amount: totalAmountNum,
           payments_count: paymentsCountNum,
           start_date: startDate,
-          round_payments_to: roundPaymentsToNum, 
+          round_payments_to: roundPaymentsToNum,
           end_date: endDate
         })
       })
 
       const data = await response.json()
       console.log('Ответ сервера:', data)
-      alert('Рассрочка успешно создана!')
       if (response.ok) {
+        alert('Рассрочка успешно создана!')
         toMain('/main')
       }
     } catch (error) {
@@ -123,9 +123,9 @@ function LoanParameters () {
         <div>
           <label>Выберите шаг округления</label>
           <select
-          value={roundPaymentsTo}
-          onChange={e => setRoundPaymentsTo(e.target.value)}
-          required
+            value={roundPaymentsTo}
+            onChange={e => setRoundPaymentsTo(e.target.value)}
+            required
           >
             <option value={0}>Без округления</option>
             {Array.from({ length: 10 }, (_, i) => {
