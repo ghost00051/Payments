@@ -32,9 +32,9 @@ function Profile () {
       <div className='headerOfBlockProfile'>
         <p>Профиль</p>
       </div>
-      <div>
+      {/* <div>
         <p>Имя</p>
-      </div>
+      </div> */}
       <div className='godBlocksofMain'>
         <div onClick={goToDescription} className='paugesOfPayments'>
           <div className='loadingOfProfile'>

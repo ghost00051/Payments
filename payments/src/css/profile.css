@@ -3,15 +3,24 @@
   display: flex;
   flex-direction: column;
 }
-.loadingOfProfile,
+.loadingOfProfile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 13px;
+  box-shadow: 0px 0px 24px -6px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 1);
+  padding: 4% 5% 4% 5%;
+}
+
 .LogOutButton {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-radius: 24px;
+  border-radius: 13px;
   box-shadow: 0px 0px 24px -6px rgba(0, 0, 0, 0.25);
   background: rgba(255, 255, 255, 1);
-  padding: 0 5% 0 5%;
+  padding: 5% 5% 5% 5%;
 }
 
 .leftBlocksFirstPages,
@@ -92,6 +101,7 @@
 
 .headerOfBlockProfile {
   margin-left: 5%;
+  margin-bottom: 2%;
 }
 
 .headerOfBlockProfile p {
@@ -99,8 +109,5 @@
   font-family: Poppins;
   font-size: 35px;
   font-weight: 500;
-  line-height: 24px;
-  letter-spacing: 0%;
   text-align: left;
 }
-
